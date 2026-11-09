@@ -11,8 +11,8 @@ struct FooterView: View {
   @State private var showClearAll = false
 
   var clearAllModifiersPressed: Bool {
-    let clearModifiers = footer.items[0].shortcuts.first?.modifierFlags ?? []
-    let clearAllModifiers = footer.items[1].shortcuts.first?.modifierFlags ?? []
+    let clearModifiers = footer.actionItems[0].shortcuts.first?.modifierFlags ?? []
+    let clearAllModifiers = footer.actionItems[1].shortcuts.first?.modifierFlags ?? []
     return !modifierFlags.flags.isEmpty
       && !modifierFlags.flags.isSubset(of: clearModifiers)
       && modifierFlags.flags.isSubset(of: clearAllModifiers)
@@ -25,32 +25,32 @@ struct FooterView: View {
         .padding(.bottom, Popup.verticalSeparatorPadding)
 
       ZStack {
-        FooterItemView(item: footer.items[0])
+        FooterItemView(item: footer.actionItems[0])
           .invisible(!showClear)
-        FooterItemView(item: footer.items[1])
+        FooterItemView(item: footer.actionItems[1])
           .invisible(!showClearAll)
       }
       .onChange(of: modifierFlags.flags) {
         if clearAllModifiersPressed {
           showClear = false
           showClearAll = true
-          footer.items[0].isVisible = false
-          footer.items[1].isVisible = true
-          if appState.footer.selectedItem == footer.items[0] {
-            appState.navigator.select(footerItem: footer.items[1])
+          footer.actionItems[0].isVisible = false
+          footer.actionItems[1].isVisible = true
+          if appState.footer.selectedItem == footer.actionItems[0] {
+            appState.navigator.select(footerItem: footer.actionItems[1])
           }
         } else {
           showClear = true
           showClearAll = false
-          footer.items[0].isVisible = true
-          footer.items[1].isVisible = false
-          if appState.footer.selectedItem == footer.items[1] {
-            appState.navigator.select(footerItem: footer.items[0])
+          footer.actionItems[0].isVisible = true
+          footer.actionItems[1].isVisible = false
+          if appState.footer.selectedItem == footer.actionItems[1] {
+            appState.navigator.select(footerItem: footer.actionItems[0])
           }
         }
       }
 
-      ForEach(footer.items.suffix(from: 2)) { item in
+      ForEach(footer.actionItems.suffix(from: 2)) { item in
         FooterItemView(item: item)
       }
     }

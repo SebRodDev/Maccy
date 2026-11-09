@@ -24,10 +24,10 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     }
   }
   var pinnedItems: [HistoryItemDecorator] {
-    searchQuery.isEmpty ? allPinnedItems : filteredPinnedItems
+    isFiltering ? filteredPinnedItems : allPinnedItems
   }
   var unpinnedItems: [HistoryItemDecorator] {
-    searchQuery.isEmpty ? allUnpinnedItems : filteredUnpinnedItems
+    isFiltering ? filteredUnpinnedItems : allUnpinnedItems
   }
   var availablePins: [String] { pinManager.availablePins }
 
@@ -50,6 +50,24 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       }
     }
   }
+
+  // The content type tab currently shown. Only used when type tabs are enabled.
+  var activeKind: ContentKind = .all {
+    didSet {
+      guard activeKind != oldValue else { return }
+      updateSearchResults()
+      AppState.shared.navigator.select(item: firstUnpinnedItem ?? firstPinnedItem)
+      AppState.shared.popup.needsResize = true
+    }
+  }
+
+  // Kinds that have at least one item, in tab order. "All" is always included.
+  var availableKinds: [ContentKind] {
+    let present = Set((allPinnedItems + allUnpinnedItems).map(\.kind))
+    return ContentKind.allCases.filter { $0 == .all || present.contains($0) }
+  }
+
+  private var isFiltering: Bool { !searchQuery.isEmpty || activeKind != .all }
 
   var pressedShortcutItem: HistoryItemDecorator? {
     guard let event = NSApp.currentEvent else {
@@ -114,6 +132,12 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     }
 
     Task {
+      for await enabled in Defaults.updates(.showKindTabs, initial: false) where !enabled {
+        activeKind = .all
+      }
+    }
+
+    Task {
       for await _ in Defaults.updates(.imageMaxHeight, initial: false) {
         for item in items {
           item.cleanupImages()
@@ -133,6 +157,9 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     filteredUnpinnedItems = allUnpinnedItems
 
     limitHistorySize(to: Defaults[.size])
+    if isFiltering {
+      updateSearchResults()
+    }
 
     updateShortcuts()
     // Ensure that panel size is proper *after* loading all items.
@@ -212,10 +239,10 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       insertUnpinned(itemDecorator)
     }
 
-    if searchQuery.isEmpty {
-      updateUnpinnedShortcuts()
-    } else {
+    if isFiltering {
       updateSearchResults()
+    } else {
+      updateUnpinnedShortcuts()
     }
     AppState.shared.popup.needsResize = true
     return itemDecorator
@@ -241,6 +268,7 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       allUnpinnedItems.removeAll()
       filteredUnpinnedItems.removeAll()
       sessionLog.removeValues { $0.pin == nil }
+      resetActiveKindIfEmpty()
 
       try? Storage.shared.context.transaction {
         try? Storage.shared.context.delete(
@@ -273,6 +301,7 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
       filteredUnpinnedItems.removeAll()
       pinManager.removeAll()
       sessionLog.removeAll()
+      activeKind = .all
 
       do {
         let context = Storage.shared.context
@@ -315,6 +344,7 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
     filteredPinnedItems.removeAll { $0 == item }
     filteredUnpinnedItems.removeAll { $0 == item }
     sessionLog.removeValues { $0 == item.item }
+    resetActiveKindIfEmpty()
 
     updateUnpinnedShortcuts()
     Task {
@@ -524,13 +554,25 @@ class History: ItemsContainer { // swiftlint:disable:this type_body_length
 
   private func updateSearchResults() {
     filteredPinnedItems = filteredItems(
-      from: search.search(string: searchQuery, within: allPinnedItems)
+      from: search.search(string: searchQuery, within: itemsOfActiveKind(allPinnedItems))
     )
     filteredUnpinnedItems = filteredItems(
-      from: search.search(string: searchQuery, within: allUnpinnedItems)
+      from: search.search(string: searchQuery, within: itemsOfActiveKind(allUnpinnedItems))
     )
 
     updateUnpinnedShortcuts()
+  }
+
+  private func itemsOfActiveKind(_ items: [HistoryItemDecorator]) -> [HistoryItemDecorator] {
+    guard activeKind != .all else { return items }
+    return items.filter { $0.kind == activeKind }
+  }
+
+  // A tab disappears once it has no items, so switch back to "All" instead of
+  // leaving the list empty behind a tab that is no longer shown.
+  private func resetActiveKindIfEmpty() {
+    guard activeKind != .all, !availableKinds.contains(activeKind) else { return }
+    activeKind = .all
   }
 
   private func filteredItems(from results: [Search.SearchResult]) -> [HistoryItemDecorator] {

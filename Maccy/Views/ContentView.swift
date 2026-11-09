@@ -1,3 +1,4 @@
+import Defaults
 import SwiftData
 import SwiftUI
 
@@ -7,6 +8,7 @@ struct ContentView: View {
   @State private var scenePhase: ScenePhase = .background
 
   @FocusState private var searchFocused: Bool
+  @Default(.showKindTabs) private var showKindTabs
 
   var body: some View {
     ZStack {
@@ -30,7 +32,11 @@ struct ContentView: View {
                 searchFocused: $searchFocused
               )
 
-              FooterView(footer: appState.footer)
+              if showKindTabs {
+                FooterTabsView(footer: appState.footer)
+              } else {
+                FooterView(footer: appState.footer)
+              }
             }
             .animation(.default.speed(3), value: appState.history.items)
             .animation(

@@ -36,3 +36,5 @@
 "OpenPreferencesWarning" = "⚠️ Pritisnite ⌘, (command+comma) da odprete nastavitve, ko je noga skrita.";
 "ShowHexColorSwatch" = "Prikaži vzorec hex barve";
 "ShowHexColorSwatchTooltip" = "Prikaži barvni vzorec ob hex barvnih kodah.";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

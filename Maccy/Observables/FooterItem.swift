@@ -22,7 +22,16 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
   var confirmation: Confirmation?
   var showConfirmation: Bool = false
   var suppressConfirmation: Binding<Bool>?
-  var isVisible: Bool = true
+  // Set for content type tabs.
+  var kind: ContentKind?
+  // Lets an item hide itself based on other state, e.g. a tab without items.
+  @ObservationIgnored
+  var isAvailable: (() -> Bool)?
+  var storedVisibility: Bool = true
+  var isVisible: Bool {
+    get { storedVisibility && (isAvailable?() ?? true) }
+    set { storedVisibility = newValue }
+  }
   var action: () -> Void
 
   init(

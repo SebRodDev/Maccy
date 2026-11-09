@@ -36,3 +36,5 @@
 "OpenPreferencesWarning" = "⚠️ Нажмите ⌘, (command+comma) чтобы открыть настройки когда нижний колонтитул скрыт.";
 "ShowHexColorSwatch" = "Показывать образец hex-цвета";
 "ShowHexColorSwatchTooltip" = "Показывать образец цвета рядом с hex-кодами цветов.";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

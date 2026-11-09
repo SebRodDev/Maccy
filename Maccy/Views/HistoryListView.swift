@@ -118,6 +118,7 @@ struct HistoryListView: View {
         }
         .onChange(of: scenePhase) {
           if scenePhase == .active {
+            appState.history.activeKind = .all
             searchFocused = true
             appState.navigator.isKeyboardNavigating = true
             appState.navigator.select(item: appState.history.firstUnpinnedItem ?? appState.history.firstPinnedItem)

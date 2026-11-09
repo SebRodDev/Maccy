@@ -36,3 +36,5 @@
 "PinToTop" = "Yuqorida";
 "ShowHexColorSwatch" = "Hex rang namunasini koʻrsatish";
 "ShowHexColorSwatchTooltip" = "Hex rang kodlari yonida rang namunasini koʻrsatish.";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

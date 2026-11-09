@@ -36,3 +36,5 @@
 "OpenPreferencesWarning" = "";
 "ShowHexColorSwatch" = "Εμφάνιση δείγματος δεκαεξαδικού χρώματος";
 "ShowHexColorSwatchTooltip" = "Εμφάνιση δείγματος χρώματος δίπλα σε δεκαεξαδικούς κωδικούς χρωμάτων.";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

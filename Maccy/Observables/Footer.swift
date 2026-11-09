@@ -3,7 +3,23 @@ import SwiftUI
 
 @Observable
 class Footer: ItemsContainer {
-  var items: [FooterItem] = []
+  // Clear, Clear all, Preferences, About and Quit. Their keyboard shortcuts
+  // look them up here regardless of how the footer is displayed.
+  var actionItems: [FooterItem] = []
+
+  // With type tabs enabled the footer becomes a row of tabs followed by
+  // a "More" button that opens the action items in a menu.
+  var tabItems: [FooterItem] = []
+  let moreItem: FooterItem
+
+  // Items reachable with keyboard navigation, in display order.
+  var items: [FooterItem] {
+    showKindTabs ? tabItems + [moreItem] : actionItems
+  }
+
+  var showKindTabs: Bool {
+    return Defaults[.showKindTabs]
+  }
 
   var selectedItem: FooterItem? {
     willSet {
@@ -25,7 +41,20 @@ class Footer: ItemsContainer {
   }
 
   init() { // swiftlint:disable:this function_body_length
-    items = [
+    tabItems = ContentKind.allCases.map { kind in
+      let item = FooterItem(title: kind.titleKey) {
+        AppState.shared.history.activeKind = kind
+      }
+      item.kind = kind
+      item.isAvailable = { AppState.shared.history.availableKinds.contains(kind) }
+      return item
+    }
+
+    moreItem = FooterItem(title: "more", help: "more_tooltip") {
+      FooterMenu.show()
+    }
+
+    actionItems = [
       FooterItem(
         title: "clear",
         shortcuts: [KeyShortcut(key: .delete, modifierFlags: [.command, .option])],

@@ -36,3 +36,5 @@
 "OpenPreferencesWarning" = "⚠️ 隱藏底部選單時，可按 ⌘, (command+comma) 顯示偏好設定。";
 "ShowHexColorSwatch" = "顯示十六進位顏色色塊";
 "ShowHexColorSwatchTooltip" = "在十六進位顏色代碼旁邊顯示顏色色塊。";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

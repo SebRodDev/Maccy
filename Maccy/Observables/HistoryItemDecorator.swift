@@ -22,6 +22,7 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
 
   var isVisible: Bool = true
   var selectionIndex: Int = -1
+  private(set) var kind: ContentKind = .text
   var isSelected: Bool {
     return selectionIndex != -1
   }
@@ -122,6 +123,7 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     synchronizeItemPin()
     synchronizeItemTitle()
     synchronizeItemText()
+    synchronizeItemKind()
   }
 
   @MainActor
@@ -260,6 +262,16 @@ class HistoryItemDecorator: Identifiable, Hashable, HasVisibility {
     } onChange: { [weak self] in
       DispatchQueue.main.async { [weak self] in
         self?.synchronizeItemText()
+      }
+    }
+  }
+
+  private func synchronizeItemKind() {
+    kind = withObservationTracking {
+      ContentKindDetector.kind(of: item)
+    } onChange: { [weak self] in
+      DispatchQueue.main.async { [weak self] in
+        self?.synchronizeItemKind()
       }
     }
   }

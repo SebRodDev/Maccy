@@ -36,3 +36,5 @@
 "OpenPreviewAutomatically" = "បើកការមើលមុនដោយស្វ័យប្រវត្តិ";
 "ShowHexColorSwatch" = "បង្ហាញគំរូពណ៌ Hex";
 "ShowHexColorSwatchTooltip" = "បង្ហាញគំរូពណ៌នៅក្បែរកូដពណ៌ Hex។";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

@@ -36,3 +36,5 @@
 "OpenPreferencesWarning" = "⚠️ Naciśnij ⌘, (command+comma) aby otworzyć ustawienia, kiedy stopka jest ukryta.";
 "ShowHexColorSwatch" = "Pokaż próbkę koloru hex";
 "ShowHexColorSwatchTooltip" = "Pokaż próbkę koloru obok kodów kolorów hex.";
+"ShowKindTabs" = "Show content type tabs in footer";
+"ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";

@@ -25,3 +25,11 @@
 "history_item_image_accessibility_label_no_app" = "ছবি, %d×%d";
 "history_item_image_accessibility_generic" = "ছবি";
 "toolbar_remove_paste_stack_action" = "পেস্ট স্ট্যাক বন্ধ করুন";
+"content_kind_all" = "All";
+"content_kind_text" = "Text";
+"content_kind_link" = "Links";
+"content_kind_code" = "Code";
+"content_kind_image" = "Images";
+"content_kind_file" = "Files";
+"more" = "More";
+"more_tooltip" = "Clear, preferences, about and quit";
