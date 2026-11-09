@@ -38,3 +38,5 @@
 "ShowHexColorSwatchTooltip" = "在十六進位顏色代碼旁邊顯示顏色色塊。";
 "ShowKindTabs" = "Show content type tabs in footer";
 "ShowKindTabsTooltip" = "Group history into Text, Links, Code, Images and Files tabs. Clear, Preferences, About and Quit move into a menu next to the tabs.";
+"MaxVisibleItems" = "Visible items:";
+"MaxVisibleItemsTooltip" = "Number of history items the popup shows before the list scrolls.\nDefault: 10.";

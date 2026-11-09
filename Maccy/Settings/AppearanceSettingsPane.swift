@@ -8,6 +8,7 @@ struct AppearanceSettingsPane: View {
   @Default(.popupScreen) private var popupScreen
   @Default(.pinTo) private var pinTo
   @Default(.imageMaxHeight) private var imageHeight
+  @Default(.maxVisibleItems) private var maxVisibleItems
   @Default(.openPreviewAutomatically) private var openPreviewAutomatically
   @Default(.previewDelay) private var previewDelay
   @Default(.highlightMatch) private var highlightMatch
@@ -25,6 +26,13 @@ struct AppearanceSettingsPane: View {
     let formatter = NumberFormatter()
     formatter.minimum = 1
     formatter.maximum = 200
+    return formatter
+  }()
+
+  private let maxVisibleItemsFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.minimum = 3
+    formatter.maximum = 100
     return formatter
   }()
 
@@ -91,6 +99,18 @@ struct AppearanceSettingsPane: View {
         .frame(width: 141, alignment: .leading)
         .help(Text("PinToTooltip", tableName: "AppearanceSettings"))
         .accessibilityLabel(Text("PinTo", tableName: "AppearanceSettings"))
+      }
+
+      Settings.Section(label: { Text("MaxVisibleItems", tableName: "AppearanceSettings") }) {
+        HStack {
+          TextField("", value: $maxVisibleItems, formatter: maxVisibleItemsFormatter)
+            .frame(width: 120)
+            .help(Text("MaxVisibleItemsTooltip", tableName: "AppearanceSettings"))
+            .accessibilityLabel(Text("MaxVisibleItems", tableName: "AppearanceSettings"))
+          Stepper("", value: $maxVisibleItems, in: 3...100)
+            .labelsHidden()
+            .accessibilityLabel(Text("MaxVisibleItems", tableName: "AppearanceSettings"))
+        }
       }
 
       Settings.Section(label: { Text("ImageHeight", tableName: "AppearanceSettings") }) {

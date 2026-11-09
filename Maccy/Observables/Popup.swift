@@ -44,6 +44,11 @@ class Popup {
   var extraBottomHeight: CGFloat = 0
   var footerHeight: CGFloat = 0
 
+  // The popup grows with the history up to this many rows, then the list scrolls.
+  var maximumListHeight: CGFloat {
+    return CGFloat(max(Defaults[.maxVisibleItems], 1)) * Popup.itemHeight + 2 * Popup.verticalSeparatorPadding
+  }
+
   var minimumHeight: CGFloat {
     // Reserve space for 3 items
     return suitableHeight(for: 3 * Popup.itemHeight)
@@ -56,6 +61,12 @@ class Popup {
   init() {
     KeyboardShortcuts.onKeyDown(for: .popup, action: handleFirstKeyDown)
     initEventsMonitor()
+
+    Task {
+      for await _ in Defaults.updates(.maxVisibleItems, initial: false) {
+        needsResize = true
+      }
+    }
   }
 
   isolated deinit {
@@ -114,7 +125,7 @@ class Popup {
   }
 
   func resize(height: CGFloat) {
-    self.height = suitableHeight(for: height)
+    self.height = suitableHeight(for: min(height, maximumListHeight))
     AppState.shared.appDelegate?.panel.verticallyResize(to: preferredHeight(for: self.height))
     needsResize = false
   }
